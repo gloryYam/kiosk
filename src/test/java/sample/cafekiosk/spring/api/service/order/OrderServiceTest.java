@@ -68,18 +68,18 @@ class OrderServiceTest {
                 .build();
 
         // when
-        OrderResponse orderResponse = orderService.createOrder(request, registeredDateTime);
+        OrderResponse orderResponse = orderService.createOrder(request.toServiceRequest(), registeredDateTime);
 
         // then
         assertThat(orderResponse.getId()).isNotNull();
 
         assertThat(orderResponse)
-                .extracting("registeredDateTime", "totalPrice")
+                .extracting("registeredDateTime", "totalPrice")     // 검증하고자 하는 필드 추출
                 .contains(registeredDateTime, 3000);
 
         assertThat(orderResponse.getProducts()).hasSize(2)
-                .extracting("productNumber", "price")
-                .containsExactlyInAnyOrder(
+                .extracting("productNumber", "price")   // 검증하고자 하는 필드 추출
+                .containsExactlyInAnyOrder(     // 순서 상관없이 (반대 -> containsExactly())
                         tuple("001", 1000),
                         tuple("002", 2000)
                 );
@@ -102,7 +102,7 @@ class OrderServiceTest {
                 .build();
 
         // when
-        OrderResponse orderResponse = orderService.createOrder(request, registeredDateTime);
+        OrderResponse orderResponse = orderService.createOrder(request.toServiceRequest(), registeredDateTime);
 
         // then
         assertThat(orderResponse.getId()).isNotNull();
@@ -140,7 +140,7 @@ class OrderServiceTest {
                 .build();
 
         // when
-        OrderResponse orderResponse = orderService.createOrder(request, registeredDateTime);
+        OrderResponse orderResponse = orderService.createOrder(request.toServiceRequest(), registeredDateTime);
 
         // then
         assertThat(orderResponse.getId()).isNotNull();
@@ -191,7 +191,7 @@ class OrderServiceTest {
                 .build();
 
         // when // then
-        assertThatThrownBy(() -> orderService.createOrder(request, registeredDateTime))
+        assertThatThrownBy(() -> orderService.createOrder(request.toServiceRequest(), registeredDateTime))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("재고가 부족한 상품이 있습니다.");
 

@@ -1,9 +1,10 @@
 package sample.cafekiosk.spring.api.service.order;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
+import org.springframework.transaction.annotation.Transactional;
+import sample.cafekiosk.spring.api.service.order.request.OrderCreateServiceRequest;
 import sample.cafekiosk.spring.api.service.order.response.OrderResponse;
 import sample.cafekiosk.spring.domain.order.Order;
 import sample.cafekiosk.spring.domain.order.OrderRepository;
@@ -20,7 +21,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Slf4j
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class OrderService {
 
@@ -28,14 +30,15 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final StockRepository stockRepository;
 
-    public OrderResponse createOrder(OrderCreateRequest request, LocalDateTime registeredDateTime) {
+    @Transactional
+    public OrderResponse createOrder(OrderCreateServiceRequest request, LocalDateTime registeredDateTime) {
 
         List<String> productNumbers = request.getProductNumbers();
+        log.info("상품 번호={}", productNumbers);
 
         List<Product> products = findProductsBy(productNumbers);
 
         deductStockQuantities(products);
-
 
         Order order = Order.create(products, registeredDateTime);
         Order saveOrder = orderRepository.save(order);

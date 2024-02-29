@@ -15,6 +15,12 @@ public class CafeKioskRunner {
 
         int totalPrice = cafeKiosk.calculateTotalPrice();
         System.out.println(">>> 총 주문 가격 : " + totalPrice);
+
+        int x = 100;
+        int y = 50;
+        int sum = 0;
+        sum= x+y;
+        System.out.println("x+y= "+ sum % 2);
     }
 
 }
