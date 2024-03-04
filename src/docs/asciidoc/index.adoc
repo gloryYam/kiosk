@@ -15,10 +15,13 @@ endif::[]
 [[product-create]]
 === 신규 상품 등록
 
-==== HTTP Request
-include::{snippets}/product-create/http-request.adoc[]
-include::{snippets}/product-create/request-fields.adoc[]
+include::api/product/product.adoc[]
 
-==== HTTP Response
-include::{snippets}/product-create/http-response.adoc[]
-include::{snippets}/product-create/response-fields.adoc[]
+
+[[Order-API]]
+== Order API
+
+[[order-create]]
+=== 주문 생성
+
+include::api/order/order.adoc[]

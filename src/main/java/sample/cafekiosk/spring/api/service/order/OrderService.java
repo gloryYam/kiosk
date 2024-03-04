@@ -34,8 +34,6 @@ public class OrderService {
     public OrderResponse createOrder(OrderCreateServiceRequest request, LocalDateTime registeredDateTime) {
 
         List<String> productNumbers = request.getProductNumbers();
-        log.info("상품 번호={}", productNumbers);
-
         List<Product> products = findProductsBy(productNumbers);
 
         deductStockQuantities(products);
