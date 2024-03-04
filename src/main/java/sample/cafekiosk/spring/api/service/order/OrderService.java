@@ -45,6 +45,17 @@ public class OrderService {
         return OrderResponse.of(saveOrder);
     }
 
+    private List<Product> findProductsBy(List<String> productNumbers) {
+        List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
+        Map<String, Product> productMap = products.stream()
+            .collect(Collectors.toMap(Product::getProductNumber, p -> p));
+
+        return productNumbers.stream()
+            .map(productNumber -> productMap.get(productNumber))
+            .collect(Collectors.toList());
+
+    }
+
     private void deductStockQuantities(List<Product> products) {
         // 재고 체크가 필요한 상품들 filter
         List<String> stockProductNumbers = extractStockProductNumbers(products);
@@ -64,17 +75,6 @@ public class OrderService {
             }
             stock.deductQuantity(quantity);     // 차감
         }
-    }
-
-    private List<Product> findProductsBy(List<String> productNumbers) {
-        List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
-        Map<String, Product> productMap = products.stream()
-                .collect(Collectors.toMap(Product::getProductNumber, p -> p));
-
-        return productNumbers.stream()
-                .map(productNumber -> productMap.get(productNumber))
-                .collect(Collectors.toList());
-
     }
 
     private static List<String> extractStockProductNumbers(List<Product> products) {

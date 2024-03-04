@@ -106,14 +106,5 @@ class CafeKioskTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("주문 시간이 아닙니다. 관리자에게 문의하세요.");
     }
-    
-    @Test
-    @DisplayName("")
-    void CafeKioskTest() {
-        // given
-        
-        // when
-        
-        // then
-    }
+
 }
