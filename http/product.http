@@ -1,2 +1,27 @@
 ### 판매할 수 있는 상품 조회
 GET localhost:8080/api/product/selling
+
+### 상품 등록
+POST localhost:8080/api/products/new
+Content-Type: application/json
+
+{
+  "type": "HANDMADE",
+  "sellingStatus": "SELLING",
+  "name": "라떼",
+  "price": 4000
+}
+
+### 상품 수정
+POST localhost:8080/api/products/4
+Content-Type: application/json
+
+{
+  "type": "HANDMADE",
+  "sellingStatus": "SELLING",
+  "name": "아메리카노우",
+  "price": 4000
+}
+
+### 상품 삭제
+DELETE localhost:8080/api/products/7

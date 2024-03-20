@@ -3,14 +3,16 @@ package sample.cafekiosk.spring.api.service.product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sample.cafekiosk.spring.api.controller.product.dto.request.ProductCreateRequest;
 import sample.cafekiosk.spring.api.service.product.request.ProductCreateServiceRequest;
+import sample.cafekiosk.spring.api.service.product.request.ProductUpdateServiceRequest;
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
 import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 import sample.cafekiosk.spring.domain.product.ProductRepository;
+import sample.cafekiosk.spring.exception.product.ProductNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +30,26 @@ public class ProductService {
         Product saveProduct = productRepository.save(product);
 
         return ProductResponse.of(saveProduct);
+    }
+
+    @Transactional
+    public ProductResponse updateProduct(Long id, ProductUpdateServiceRequest request) {
+        // 상품을 가져온다.
+        Product product = productRepository.findById(id)
+            .orElseThrow(ProductNotFoundException::new);
+
+        Product newProduct = request.toEntity(product.getProductNumber());
+
+        product.update(newProduct);
+        return ProductResponse.of(product);
+    }
+
+    @Transactional
+    public void deleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+            .orElseThrow(ProductNotFoundException::new);
+
+        productRepository.delete(product);
     }
 
     public List<ProductResponse> getSellingProducts() {
@@ -49,4 +71,5 @@ public class ProductService {
 
         return String.format("%03d", nextProductNumberInt);
     }
+
 }

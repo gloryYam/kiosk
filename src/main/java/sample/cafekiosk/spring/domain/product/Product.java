@@ -36,4 +36,12 @@ public class Product extends BaseEntity {
         this.name = name;
         this.price = price;
     }
+
+    public void update(Product newProduct) {
+        this.productNumber = newProduct.getProductNumber();
+        this.type = newProduct.getType();
+        this.sellingStatus = newProduct.getSellingStatus();
+        this.name = newProduct.getName();
+        this.price = newProduct.getPrice();
+    }
 }

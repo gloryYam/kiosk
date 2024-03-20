@@ -1,31 +1,26 @@
 package sample.cafekiosk.spring.api.controller.product;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
+import org.mockito.BDDMockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import sample.cafekiosk.spring.ControllerTestSupport;
 import sample.cafekiosk.spring.api.controller.product.dto.request.ProductCreateRequest;
-import sample.cafekiosk.spring.api.service.product.ProductService;
+import sample.cafekiosk.spring.api.controller.product.dto.request.ProductUpdateRequest;
+import sample.cafekiosk.spring.api.service.product.request.ProductUpdateServiceRequest;
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
+import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 import sample.cafekiosk.spring.domain.product.ProductType;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -168,5 +163,56 @@ class ProductControllerTest extends ControllerTestSupport {
             .andExpect(jsonPath("$.status").value("OK"))
             .andExpect(jsonPath("$.message").value("OK"))
             .andExpect(jsonPath("$.data").isArray());
+    }
+
+    @Test
+    @DisplayName("등록된 상품을 수정한다")
+    void updateProduct() throws Exception {
+        // given
+
+        ProductUpdateRequest request = ProductUpdateRequest.builder()
+            .type(ProductType.HANDMADE)
+            .sellingStatus(STOP_SELLING)
+            .name("아메리카노")
+            .price(1000)
+            .build();
+
+        BDDMockito.given(productService.updateProduct(any(Long.class), any(ProductUpdateServiceRequest.class)))
+            .willReturn(ProductResponse.builder()
+                .id(1L)
+                .type(request.getType())
+                .productNumber("001")
+                .sellingStatus(STOP_SELLING)
+                .name(request.getName())
+                .price(request.getPrice())
+                .build());
+
+        // when // then
+        mockMvc.perform(post("/api/products/{productId}", 1L)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request))
+        )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.code").value(200))
+            .andExpect(jsonPath("$.status").value("OK"))
+            .andExpect(jsonPath("$.message").value("OK"))
+            .andExpect(jsonPath("$.data").exists())
+            .andDo(print());
+    }
+
+    @Test
+    @DisplayName("등록된 상품 삭제")
+    void deleteProduct() throws Exception {
+
+        // void 를 명시적으로 표현, 반환 값이 없을 때
+        BDDMockito.doNothing().when(productService).deleteProduct(1L);
+
+        // when // then
+        mockMvc.perform(delete("/api/products/{productId}", 1L))
+            .andExpect(status().isOk())
+            .andDo(print());
+
+        // 메소드 호출 확인
+        verify(productService).deleteProduct(1L);
     }
 }

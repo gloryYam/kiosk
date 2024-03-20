@@ -7,12 +7,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sample.cafekiosk.spring.api.service.product.request.ProductCreateServiceRequest;
+import sample.cafekiosk.spring.api.service.product.request.ProductUpdateServiceRequest;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 import sample.cafekiosk.spring.domain.product.ProductType;
 
 @Getter
 @NoArgsConstructor
-public class ProductCreateRequest {
+public class ProductUpdateRequest {
 
     /**
      * NotNull => ""빈문자열 O, "   "공백 O
@@ -33,15 +34,15 @@ public class ProductCreateRequest {
     private int price;
 
     @Builder
-    public ProductCreateRequest(ProductType type, ProductSellingStatus sellingStatus, String name, int price) {
+    public ProductUpdateRequest(ProductType type, ProductSellingStatus sellingStatus, String name, int price) {
         this.type = type;
         this.sellingStatus = sellingStatus;
         this.name = name;
         this.price = price;
     }
 
-    public ProductCreateServiceRequest toServiceRequest() {
-        return ProductCreateServiceRequest.builder()
+    public ProductUpdateServiceRequest toServiceRequest() {
+        return ProductUpdateServiceRequest.builder()
             .type(type)
             .sellingStatus(sellingStatus)
             .name(name)
