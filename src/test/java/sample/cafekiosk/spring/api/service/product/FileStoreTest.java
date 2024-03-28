@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import sample.cafekiosk.spring.IntegrationTestSupport;
+import sample.cafekiosk.spring.api.service.file.FileStore;
 import sample.cafekiosk.spring.domain.product.Image;
 import sample.cafekiosk.spring.domain.product.ImageType;
 import sample.cafekiosk.spring.exception.file.EmptyFileException;

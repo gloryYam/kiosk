@@ -34,12 +34,13 @@ public class Product extends BaseEntity {
     private Image image;
 
     @Builder
-    private Product(String productNumber, ProductType type, ProductSellingStatus sellingStatus, String name, int price) {
+    private Product(String productNumber, ProductType type, ProductSellingStatus sellingStatus, String name, int price, Image image) {
         this.productNumber = productNumber;
         this.type = type;
         this.sellingStatus = sellingStatus;
         this.name = name;
         this.price = price;
+        this.image = image;
     }
 
     public void update(Product newProduct) {
@@ -48,5 +49,9 @@ public class Product extends BaseEntity {
         this.sellingStatus = newProduct.getSellingStatus();
         this.name = newProduct.getName();
         this.price = newProduct.getPrice();
+    }
+
+    public void addImage(Image image) {
+        this.image = image;
     }
 }

@@ -11,26 +11,34 @@ import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 import sample.cafekiosk.spring.domain.product.repository.ProductRepository;
 import sample.cafekiosk.spring.exception.product.ProductNotFound404Exception;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ProductService {
+public class ProductService{
 
     private final ProductRepository productRepository;
+    private final ImageService imageService;
 
+    /**
+     * 등록
+     */
     @Transactional
-    public ProductResponse createProduct(ProductCreateServiceRequest request) {
+    public ProductResponse createProduct(ProductCreateServiceRequest request) throws IOException {
         String nextProductNumber = createNextProductNumber();
-
         Product product = request.toEntity(nextProductNumber);
-        Product saveProduct = productRepository.save(product);
 
+        imageService.addImageToProduct(request, product);
+        Product saveProduct = productRepository.save(product);
         return ProductResponse.of(saveProduct);
     }
 
+    /**
+     * 수정
+     */
     @Transactional
     public ProductResponse updateProduct(Long id, ProductUpdateServiceRequest request) {
         // 상품을 가져온다.

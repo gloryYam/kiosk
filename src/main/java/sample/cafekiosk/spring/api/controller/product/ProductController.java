@@ -9,6 +9,7 @@ import sample.cafekiosk.spring.api.controller.product.dto.request.ProductUpdateR
 import sample.cafekiosk.spring.api.service.product.ProductService;
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -19,7 +20,7 @@ public class ProductController {
 
     // 저장 POST
     @PostMapping("/api/products/new")
-    public ApiResponse<ProductResponse> createProduct(@Valid @RequestBody ProductCreateRequest request) {
+    public ApiResponse<ProductResponse> createProduct(@Valid @RequestBody ProductCreateRequest request) throws IOException {
         return ApiResponse.ok(productService.createProduct(request.toServiceRequest()));
     }
 

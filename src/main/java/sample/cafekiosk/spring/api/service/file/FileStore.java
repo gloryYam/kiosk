@@ -1,7 +1,6 @@
-package sample.cafekiosk.spring.api.service.product;
+package sample.cafekiosk.spring.api.service.file;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import sample.cafekiosk.spring.domain.product.Image;
@@ -20,7 +19,9 @@ import java.util.UUID;
 public class FileStore {
 
     public String getFilePath() {
-        Path filePath = Paths.get(System.getProperty("users.dudrh"));
+        String userHome = System.getProperty("user.home");
+        log.info("User home directory: {}", userHome);
+        Path filePath = Paths.get(userHome, "myshop");
 
         try {
             if(Files.notExists(filePath)) {
@@ -33,7 +34,7 @@ public class FileStore {
             log.error("Permission denied to create directory: " + filePath, e);
         }
 
-        return filePath + File.separator;
+        return filePath.toString() + File.separator;
     }
 
 
