@@ -6,7 +6,8 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import sample.cafekiosk.spring.exception.CustomException;
+import sample.cafekiosk.spring.exception.custom.Custom400Exception;
+import sample.cafekiosk.spring.exception.custom.Custom404Exception;
 import sample.cafekiosk.spring.exception.response.ErrorResponse;
 
 @RestControllerAdvice
@@ -21,9 +22,15 @@ public class ApiControllerAdvice {
             null);
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(Custom404Exception.class)
+    public ResponseEntity<ErrorResponse> notFoundException(Custom404Exception e) {
+        return ErrorResponse.error(e);
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse> productException(CustomException e) {
+    @ExceptionHandler(Custom400Exception.class)
+    public ResponseEntity<ErrorResponse> badRequestException(Custom400Exception e) {
         return ErrorResponse.error(e);
     }
 

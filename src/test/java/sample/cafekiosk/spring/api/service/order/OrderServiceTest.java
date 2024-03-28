@@ -1,24 +1,25 @@
 package sample.cafekiosk.spring.api.service.order;
 
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import sample.cafekiosk.spring.IntegrationTestSupport;
 import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
 import sample.cafekiosk.spring.api.service.order.response.OrderResponse;
+import sample.cafekiosk.spring.domain.order.Order;
 import sample.cafekiosk.spring.domain.order.OrderRepository;
 import sample.cafekiosk.spring.domain.orderproduct.OrderProductRepository;
 import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 import sample.cafekiosk.spring.domain.product.ProductType;
-import sample.cafekiosk.spring.domain.product.ProductRepository;
+import sample.cafekiosk.spring.domain.product.repository.ProductRepository;
 import sample.cafekiosk.spring.domain.stock.Stock;
-import sample.cafekiosk.spring.domain.stock.StockRepository;
+import sample.cafekiosk.spring.domain.stock.repository.StockRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -194,6 +195,36 @@ class OrderServiceTest extends IntegrationTestSupport {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("재고가 부족한 상품이 있습니다.");
 
+    }
+
+    @Test
+    @DisplayName("날짜에 맞는 주문 내역을 조회한다. ")
+    void searchByOrders() {
+        // given
+        LocalDateTime registeredDateTime = LocalDateTime.of(2024, 3, 20, 10, 0);
+
+        Product product = createProduct(HANDMADE, "001", 4000);
+        productRepository.save(product);
+
+        Order order = Order.create(List.of(product), registeredDateTime);
+        orderRepository.save(order);
+
+        LocalDate startDate = LocalDate.of(2024, 3, 19);
+        LocalDate endDate = LocalDate.of(2024, 3, 20);
+        PageRequest pageable = PageRequest.of(0, 10);
+
+        // when
+        Page<OrderResponse> searchOrder = orderService.SearchByOrders(startDate, endDate, pageable);
+
+        // then
+        List<OrderResponse> content = searchOrder.getContent();
+
+        assertThat(content).hasSize(1);
+        assertThat(content.get(0).getProducts())
+            .extracting("productNumber", "name", "price")
+            .containsExactlyInAnyOrder(
+                tuple("001", "메뉴 이름", 4000)
+            );
     }
 
     private Product createProduct(ProductType type, String productNumber, int price) {

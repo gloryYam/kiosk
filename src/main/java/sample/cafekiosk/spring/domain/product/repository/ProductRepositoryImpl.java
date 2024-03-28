@@ -1,10 +1,7 @@
-package sample.cafekiosk.spring.domain.product;
+package sample.cafekiosk.spring.domain.product.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.OrderBy;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import static sample.cafekiosk.spring.domain.product.QProduct.*;
 

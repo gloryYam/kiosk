@@ -4,16 +4,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import sample.cafekiosk.spring.domain.product.Product;
-import sample.cafekiosk.spring.domain.product.ProductRepository;
+import sample.cafekiosk.spring.domain.product.repository.ProductRepository;
+import sample.cafekiosk.spring.domain.stock.repository.StockRepository;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.junit.jupiter.api.Assertions.*;
-import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.*;
-import static sample.cafekiosk.spring.domain.product.ProductType.HANDMADE;
 
 @SpringBootTest
 class StockRepositoryTest {

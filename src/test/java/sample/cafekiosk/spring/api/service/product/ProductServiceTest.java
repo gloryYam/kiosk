@@ -9,21 +9,17 @@ import sample.cafekiosk.spring.api.controller.product.dto.request.ProductCreateR
 import sample.cafekiosk.spring.api.service.product.request.ProductUpdateServiceRequest;
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
 import sample.cafekiosk.spring.domain.product.Product;
-import sample.cafekiosk.spring.domain.product.ProductRepository;
+import sample.cafekiosk.spring.domain.product.repository.ProductRepository;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 import sample.cafekiosk.spring.domain.product.ProductType;
-import sample.cafekiosk.spring.exception.product.ProductNotFoundException;
+import sample.cafekiosk.spring.exception.product.ProductNotFound404Exception;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.StringTokenizer;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
 import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.*;
 import static sample.cafekiosk.spring.domain.product.ProductType.HANDMADE;
 
-@ActiveProfiles("test")
 @SpringBootTest
 class ProductServiceTest extends IntegrationTestSupport {
 
@@ -145,7 +141,7 @@ class ProductServiceTest extends IntegrationTestSupport {
 
         // when
         assertThatThrownBy(() -> productService.updateProduct(4L, request))
-            .isInstanceOf(ProductNotFoundException.class)
+            .isInstanceOf(ProductNotFound404Exception.class)
             .hasMessage("상품을 찾을 수 없습니다");
 
     }

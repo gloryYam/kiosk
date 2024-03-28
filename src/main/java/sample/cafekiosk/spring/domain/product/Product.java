@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sample.cafekiosk.spring.domain.BaseEntity;
 
+import java.awt.*;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -27,6 +29,9 @@ public class Product extends BaseEntity {
     private String name;
 
     private int price;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Image image;
 
     @Builder
     private Product(String productNumber, ProductType type, ProductSellingStatus sellingStatus, String name, int price) {

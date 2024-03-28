@@ -2,6 +2,9 @@ package sample.cafekiosk.spring.api.service.order;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sample.cafekiosk.spring.api.service.order.request.OrderCreateServiceRequest;
@@ -9,11 +12,12 @@ import sample.cafekiosk.spring.api.service.order.response.OrderResponse;
 import sample.cafekiosk.spring.domain.order.Order;
 import sample.cafekiosk.spring.domain.order.OrderRepository;
 import sample.cafekiosk.spring.domain.product.Product;
-import sample.cafekiosk.spring.domain.product.ProductRepository;
+import sample.cafekiosk.spring.domain.product.repository.ProductRepository;
 import sample.cafekiosk.spring.domain.product.ProductType;
 import sample.cafekiosk.spring.domain.stock.Stock;
-import sample.cafekiosk.spring.domain.stock.StockRepository;
+import sample.cafekiosk.spring.domain.stock.repository.StockRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +46,17 @@ public class OrderService {
         Order saveOrder = orderRepository.save(order);
         return OrderResponse.of(saveOrder);
     }
+
+    public Page<OrderResponse> SearchByOrders(LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        Page<Order> orders = orderRepository.findByOrderDateBetween(startDate, endDate, pageable);
+
+        List<OrderResponse> orderResponses = orders.stream()
+            .map(OrderResponse::of)
+            .toList();
+
+        return new PageImpl<>(orderResponses);
+    }
+
 
     private List<Product> findProductsBy(List<String> productNumbers) {
         List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);

@@ -1,4 +1,4 @@
-package sample.cafekiosk.spring.domain.product;
+package sample.cafekiosk.spring.domain.product.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

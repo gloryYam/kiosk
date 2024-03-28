@@ -8,11 +8,10 @@ import sample.cafekiosk.spring.api.service.product.request.ProductUpdateServiceR
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
 import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
-import sample.cafekiosk.spring.domain.product.ProductRepository;
-import sample.cafekiosk.spring.exception.product.ProductNotFoundException;
+import sample.cafekiosk.spring.domain.product.repository.ProductRepository;
+import sample.cafekiosk.spring.exception.product.ProductNotFound404Exception;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +35,7 @@ public class ProductService {
     public ProductResponse updateProduct(Long id, ProductUpdateServiceRequest request) {
         // 상품을 가져온다.
         Product product = productRepository.findById(id)
-            .orElseThrow(ProductNotFoundException::new);
+            .orElseThrow(ProductNotFound404Exception::new);
 
         Product newProduct = request.toEntity(product.getProductNumber());
 
@@ -47,7 +46,7 @@ public class ProductService {
     @Transactional
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id)
-            .orElseThrow(ProductNotFoundException::new);
+            .orElseThrow(ProductNotFound404Exception::new);
 
         productRepository.delete(product);
     }

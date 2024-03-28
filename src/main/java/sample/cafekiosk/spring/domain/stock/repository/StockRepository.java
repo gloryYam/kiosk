@@ -1,7 +1,8 @@
-package sample.cafekiosk.spring.domain.stock;
+package sample.cafekiosk.spring.domain.stock.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import sample.cafekiosk.spring.domain.stock.Stock;
 
 import java.util.List;
 
