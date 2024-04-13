@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode_400 {
 
-    EMPTY_FILE_EXCEPTION(HttpStatus.BAD_REQUEST, "파일 비어있습니다.");
+    EMPTY_FILE_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "파일 비어있습니다.");
 
-    private final HttpStatus status;
+    private final int status;
     private final String errorMessage;
 
 }

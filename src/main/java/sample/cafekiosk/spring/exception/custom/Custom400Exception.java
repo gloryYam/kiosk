@@ -1,7 +1,6 @@
 package sample.cafekiosk.spring.exception.custom;
 
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 import sample.cafekiosk.spring.exception.CustomException;
 import sample.cafekiosk.spring.exception.ErrorCode_400;
 

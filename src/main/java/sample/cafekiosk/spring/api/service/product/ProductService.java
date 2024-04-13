@@ -3,6 +3,7 @@ package sample.cafekiosk.spring.api.service.product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import sample.cafekiosk.spring.api.service.product.request.ProductCreateServiceRequest;
 import sample.cafekiosk.spring.api.service.product.request.ProductUpdateServiceRequest;
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
@@ -27,11 +28,11 @@ public class ProductService{
      * 등록
      */
     @Transactional
-    public ProductResponse createProduct(ProductCreateServiceRequest request) throws IOException {
+    public ProductResponse createProduct(ProductCreateServiceRequest request, MultipartFile mainImage) throws IOException {
         String nextProductNumber = createNextProductNumber();
         Product product = request.toEntity(nextProductNumber);
 
-        imageService.addImageToProduct(request, product);
+        imageService.addImageToProduct(mainImage, product);
         Product saveProduct = productRepository.save(product);
         return ProductResponse.of(saveProduct);
     }
@@ -40,14 +41,15 @@ public class ProductService{
      * 수정
      */
     @Transactional
-    public ProductResponse updateProduct(Long id, ProductUpdateServiceRequest request) {
+    public ProductResponse updateProduct(Long id, ProductUpdateServiceRequest request, MultipartFile updateImage) throws IOException {
         // 상품을 가져온다.
         Product product = productRepository.findById(id)
             .orElseThrow(ProductNotFound404Exception::new);
 
+        imageService.updateImageToProduct(product, updateImage);
         Product newProduct = request.toEntity(product.getProductNumber());
 
-        product.update(newProduct);
+        product.updateProduct(newProduct);
         return ProductResponse.of(product);
     }
 

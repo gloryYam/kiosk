@@ -5,17 +5,16 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import sample.cafekiosk.spring.exception.CustomException;
-import sample.cafekiosk.spring.exception.custom.Custom404Exception;
 
 @Getter
 public class ErrorResponse {
 
     private String code;
     private String message;
-    private HttpStatus status;
+    private int status;
 
     @Builder
-    public ErrorResponse(String code, String message, HttpStatus status) {
+    public ErrorResponse(String code, String message, int status) {
         this.code = code;
         this.message = message;
         this.status = status;

@@ -55,7 +55,7 @@ public class QOrderProduct extends EntityPathBase<OrderProduct> {
     public QOrderProduct(Class<? extends OrderProduct> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.order = inits.isInitialized("order") ? new sample.cafekiosk.spring.domain.order.QOrder(forProperty("order")) : null;
-        this.product = inits.isInitialized("product") ? new sample.cafekiosk.spring.domain.product.QProduct(forProperty("product")) : null;
+        this.product = inits.isInitialized("product") ? new sample.cafekiosk.spring.domain.product.QProduct(forProperty("product"), inits.get("product")) : null;
     }
 
 }

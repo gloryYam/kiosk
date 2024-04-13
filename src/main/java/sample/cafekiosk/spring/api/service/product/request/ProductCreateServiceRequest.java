@@ -20,15 +20,15 @@ public class ProductCreateServiceRequest {
     private ProductSellingStatus sellingStatus;
     private String name;
     private int price;
-    private MultipartFile mainImage;
+    private MultipartFile uploadImageFile;
 
     @Builder
-    public ProductCreateServiceRequest(ProductType type, ProductSellingStatus sellingStatus, String name, int price, MultipartFile mainImage) {
+    public ProductCreateServiceRequest(ProductType type, ProductSellingStatus sellingStatus, String name, int price, MultipartFile uploadImageFile) {
         this.type = type;
         this.sellingStatus = sellingStatus;
         this.name = name;
         this.price = price;
-        this.mainImage = mainImage;
+        this.uploadImageFile = uploadImageFile;
     }
 
     public Product toEntity(String nextProductNumber) {

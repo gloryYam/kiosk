@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sample.cafekiosk.spring.domain.BaseEntity;
 
-import java.awt.*;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -43,7 +41,7 @@ public class Product extends BaseEntity {
         this.image = image;
     }
 
-    public void update(Product newProduct) {
+    public void updateProduct(Product newProduct) {
         this.productNumber = newProduct.getProductNumber();
         this.type = newProduct.getType();
         this.sellingStatus = newProduct.getSellingStatus();

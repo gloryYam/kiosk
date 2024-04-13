@@ -3,14 +3,10 @@ spring:
     default: local
 
   datasource:
-    url: jdbc:h2:mem:~/cafeKiosk
+    url: jdbc:h2:tcp://localhost/~/kiosk
     driver-class-name: org.h2.Driver
     username: sa
     password:
-
-  jpa:
-    hibernate:
-      ddl-auto: none
 
 ---
 spring:
@@ -35,3 +31,12 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+
+jwt:
+  access:
+    secret: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    expiration: 1800000 # 30분
+
+  refresh:
+    secret: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    expiration: 86400000 # 1일

@@ -17,7 +17,8 @@ import static sample.cafekiosk.spring.domain.product.ProductType.*;
 
 @ActiveProfiles("test")
 @SpringBootTest
-class ProductRepositoryTest {
+class
+ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;

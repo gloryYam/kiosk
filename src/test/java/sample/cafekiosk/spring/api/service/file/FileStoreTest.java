@@ -1,4 +1,4 @@
-package sample.cafekiosk.spring.api.service.product;
+package sample.cafekiosk.spring.api.service.file;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,10 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import sample.cafekiosk.spring.IntegrationTestSupport;
-import sample.cafekiosk.spring.api.service.file.FileStore;
 import sample.cafekiosk.spring.domain.product.Image;
 import sample.cafekiosk.spring.domain.product.ImageType;
-import sample.cafekiosk.spring.exception.file.EmptyFileException;
+import sample.cafekiosk.spring.exception.file.FileEmptyException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -87,7 +86,7 @@ class FileStoreTest extends IntegrationTestSupport {
 
         // when // then
         assertThatThrownBy(() -> fileStore.uploadImageFile(file, main))
-            .isInstanceOf(EmptyFileException.class)
+            .isInstanceOf(FileEmptyException.class)
             .hasMessage("파일 비어있습니다.");
     }
 

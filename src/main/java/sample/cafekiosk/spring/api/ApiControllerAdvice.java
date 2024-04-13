@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import sample.cafekiosk.spring.exception.custom.Custom400Exception;
 import sample.cafekiosk.spring.exception.custom.Custom404Exception;
+import sample.cafekiosk.spring.exception.custom.Custom409Exception;
 import sample.cafekiosk.spring.exception.response.ErrorResponse;
 
 @RestControllerAdvice
@@ -34,4 +35,8 @@ public class ApiControllerAdvice {
         return ErrorResponse.error(e);
     }
 
+    @ExceptionHandler(Custom409Exception.class)
+    public ResponseEntity<ErrorResponse> conflictException(Custom409Exception e) {
+        return ErrorResponse.error(e);
+    }
 }

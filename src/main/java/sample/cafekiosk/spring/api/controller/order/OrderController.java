@@ -34,6 +34,9 @@ public class OrderController {
         return ApiResponse.ok(orderService.createOrder(request.toServiceRequest(), registeredDateTime));
     }
 
+    /**
+     * 원하는 날짜로 주문 조회
+     */
     @GetMapping("api/orders/search")
     public Page<OrderResponse> OrdersSearch(@RequestParam(name = "startDate") @DateTimeFormat(iso = ISO.DATE) LocalDate startDate,
                                             @RequestParam(name = "endDate") @DateTimeFormat(iso = ISO.DATE) LocalDate endDate,

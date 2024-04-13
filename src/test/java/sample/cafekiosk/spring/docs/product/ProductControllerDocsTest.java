@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 import sample.cafekiosk.spring.api.controller.product.ProductController;
 import sample.cafekiosk.spring.api.controller.product.dto.request.ProductCreateRequest;
@@ -12,6 +13,9 @@ import sample.cafekiosk.spring.api.service.product.request.ProductCreateServiceR
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
 import sample.cafekiosk.spring.docs.RestDocsSupport;
 import sample.cafekiosk.spring.domain.product.ProductType;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -36,6 +40,10 @@ public class ProductControllerDocsTest extends RestDocsSupport {
     @DisplayName("신규 상품을 등록하는 API")
     void createProduct() throws Exception {
 
+        byte[] imageContent = Files.readAllBytes(Paths.get("src/test/resources/test.jpg"));
+
+        MockMultipartFile mockFile = new MockMultipartFile("mainImage", "test.jpg", "image/jpg", imageContent);
+
         ProductCreateRequest request = ProductCreateRequest.builder()
             .type(ProductType.HANDMADE)
             .sellingStatus(SELLING)
@@ -43,7 +51,7 @@ public class ProductControllerDocsTest extends RestDocsSupport {
             .price(4000)
             .build();
 
-        BDDMockito.given(productService.createProduct(any(ProductCreateServiceRequest.class)))
+        BDDMockito.given(productService.createProduct(any(ProductCreateServiceRequest.class), mockFile))
                 .willReturn(ProductResponse.builder()
                     .id(1L)
                     .productNumber("001")

@@ -7,3 +7,4 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 public abstract class IntegrationTestSupport {
 }
+

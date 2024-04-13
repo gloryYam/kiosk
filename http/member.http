@@ -1,0 +1,28 @@
+### 회원가입
+POST http://localhost:8080/api/auth/new
+Content-Type: application/json
+
+{
+  "name": "glory",
+  "email": "test1@test.com",
+  "password": "1234",
+  "phone": "01012341234"
+}
+
+### 로그인
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{
+  "email": "test1@test.com",
+  "password": "1234"
+}
+
+> {%
+    client.global.set("accessToken", response.headers['Authorization']);
+    client.global.set("refreshToken", response.headers['Refresh-Token']);
+%}
+
+### 리프레쉬 토큰을 사용한 액세스 토큰 재발급
+POST http://localhost:8080/api/token/reissue
+Authorization: Bearer {{refreshToken}}

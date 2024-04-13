@@ -33,15 +33,12 @@ public class ProductCreateRequest {
     @Positive(message = "상품 가격은 양수여야 합니다.")
     private int price;
 
-    private MultipartFile mainImage;
-
     @Builder
-    public ProductCreateRequest(ProductType type, ProductSellingStatus sellingStatus, String name, int price, MultipartFile mainImage) {
+    public ProductCreateRequest(ProductType type, ProductSellingStatus sellingStatus, String name, int price) {
         this.type = type;
         this.sellingStatus = sellingStatus;
         this.name = name;
         this.price = price;
-        this.mainImage = mainImage;
     }
 
     public ProductCreateServiceRequest toServiceRequest() {
@@ -50,7 +47,6 @@ public class ProductCreateRequest {
             .sellingStatus(sellingStatus)
             .name(name)
             .price(price)
-            .mainImage(mainImage)
             .build();
     }
 }

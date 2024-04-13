@@ -2,7 +2,12 @@
 GET localhost:8080/api/product/selling
 
 ### 상품 등록
-POST localhost:8080/api/products/new
+POST http://localhost:8080/api/products/new
+Content-Type: multipart/form-data; boundary=WebClientBoundary
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImVtYWlsIjoidGVzdDFAdGVzdC5jb20iLCJhdXRoIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzEzMDAwMDY3LCJleHAiOjE3MTMwMDE4Njd9.oSkzTaIsoBpXh9Zq8jFK85p5qwKKlDpUagv7QwKkALU
+
+--WebClientBoundary
+Content-Disposition: form-data; name="request"
 Content-Type: application/json
 
 {
@@ -12,8 +17,19 @@ Content-Type: application/json
   "price": 4000
 }
 
+--WebClientBoundary
+Content-Disposition: form-data; name="uploadImage"; filename="test.jpg"
+Content-Type: image/jpeg
+
+< C:\\Users\\dudrh\\myshop\\test.jpg
+--WebClientBoundary--
+
 ### 상품 수정
 POST localhost:8080/api/products/4
+Content-Type: multipart/form-data; boundary=WebClientBoundary
+
+--WebClientBoundary
+Content-Disposition: form-data; name="request"
 Content-Type: application/json
 
 {
@@ -23,5 +39,12 @@ Content-Type: application/json
   "price": 4000
 }
 
+--WebClientBoundary
+Content-Disposition: form-data; name="updateImage"; filename="glory.jpg"
+Content-Type: image/jpeg
+
+< C:\\Users\\dudrh\\myshop\\glory.jpg
+--WebClientBoundary--
+
 ### 상품 삭제
-DELETE localhost:8080/api/products/7
+DELETE localhost:8080/api/products/4

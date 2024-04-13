@@ -6,23 +6,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import sample.cafekiosk.spring.IntegrationTestSupport;
 import sample.cafekiosk.spring.api.controller.product.dto.request.ProductCreateRequest;
-import sample.cafekiosk.spring.api.service.file.FileStore;
 import sample.cafekiosk.spring.api.service.product.request.ProductUpdateServiceRequest;
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
 import sample.cafekiosk.spring.domain.product.*;
 import sample.cafekiosk.spring.domain.product.repository.ProductRepository;
 import sample.cafekiosk.spring.exception.product.ProductNotFound404Exception;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static sample.cafekiosk.spring.domain.product.ImageType.*;
 import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.*;
 import static sample.cafekiosk.spring.domain.product.ProductType.HANDMADE;
 
@@ -47,12 +43,8 @@ class ProductServiceTest extends IntegrationTestSupport {
     @Test
     @DisplayName("신규 상품을 등록")
     void createProduct() throws IOException {
-
         // given
-        byte[] imageContent = Files.readAllBytes(Paths.get("src/test/resources/test.jpg"));
-
-        MockMultipartFile mockFile =
-            new MockMultipartFile("mainImage", "test.jpg", "image/jpg", imageContent);
+        MockMultipartFile mockFile = getMockMultipartFile();
 
         Product product1 = createProduct("001", HANDMADE, SELLING, "아메리카노", 4000);
         Product product2 = createProduct("002", HANDMADE, SELLING, "스무디", 5000);
@@ -63,10 +55,9 @@ class ProductServiceTest extends IntegrationTestSupport {
             .sellingStatus(SELLING)
             .name("아이스티")
             .price(3000)
-            .mainImage(mockFile)
             .build();
         // when
-        ProductResponse productResponse = productService.createProduct(request.toServiceRequest());
+        ProductResponse productResponse = productService.createProduct(request.toServiceRequest(), mockFile);
 
         // then
         assertThat(productResponse)
@@ -91,6 +82,8 @@ class ProductServiceTest extends IntegrationTestSupport {
     @DisplayName("상품이 하나도 없는 경우 상품을 등록하면 상품번호는 001이다.")
     void createProductWhenProductIsEmpty() throws IOException {
         // given
+        MockMultipartFile mockFile = getMockMultipartFile();
+
         ProductCreateRequest request = ProductCreateRequest.builder()
             .type(HANDMADE)
             .sellingStatus(SELLING)
@@ -98,7 +91,7 @@ class ProductServiceTest extends IntegrationTestSupport {
             .price(5000)
             .build();
         // when
-        ProductResponse productResponse = productService.createProduct(request.toServiceRequest());
+        ProductResponse productResponse = productService.createProduct(request.toServiceRequest(), mockFile);
 
         // then
         assertThat(productResponse)
@@ -116,12 +109,13 @@ class ProductServiceTest extends IntegrationTestSupport {
 
     @Test
     @DisplayName("기존 상품을 수정한다.")
-    void productUpdate() {
+    void productUpdate() throws IOException {
         // given
         Product product1 = createProduct("001", HANDMADE, SELLING, "아이스티", 3000);
         Product product2 = createProduct("002", HANDMADE, SELLING, "카페라떼", 4000);
         List<Product> products = productRepository.saveAll(List.of(product1, product2));
 
+        MockMultipartFile mockFile = getMockMultipartFile();
 
         ProductUpdateServiceRequest request = ProductUpdateServiceRequest.builder()
             .type(HANDMADE)
@@ -135,7 +129,7 @@ class ProductServiceTest extends IntegrationTestSupport {
             .findAny().orElseThrow();
 
         // when
-        ProductResponse updateProduct = productService.updateProduct(first.getId(), request);
+        ProductResponse updateProduct = productService.updateProduct(first.getId(), request, mockFile);
 
         // then
         assertThat(updateProduct)
@@ -144,15 +138,18 @@ class ProductServiceTest extends IntegrationTestSupport {
                 STOP_SELLING, "복숭아 아이스티"
             );
 
+        assertThat(updateProduct.getUploadFileImage().getOriginFileName()).isEqualTo(mockFile.getOriginalFilename());
+
     }
 
     @Test
     @DisplayName("ProductNotFoundException 이 잘 터지는 확인")
-    void productNotFoundException() {
+    void productNotFoundException() throws IOException {
         // given
         Product product = createProduct("001", HANDMADE, SELLING, "아이스티", 3000);
         Product savedProduct = productRepository.save(product);
 
+        MockMultipartFile mockFile = getMockMultipartFile();
 
         ProductUpdateServiceRequest request = ProductUpdateServiceRequest.builder()
             .type(HANDMADE)
@@ -162,7 +159,7 @@ class ProductServiceTest extends IntegrationTestSupport {
             .build();
 
         // when
-        assertThatThrownBy(() -> productService.updateProduct(4L, request))
+        assertThatThrownBy(() -> productService.updateProduct(4L, request, mockFile))
             .isInstanceOf(ProductNotFound404Exception.class)
             .hasMessage("상품을 찾을 수 없습니다");
 
@@ -192,4 +189,9 @@ class ProductServiceTest extends IntegrationTestSupport {
             .build();
     }
 
+    private static MockMultipartFile getMockMultipartFile() throws IOException {
+        byte[] imageContent = Files.readAllBytes(Paths.get("src/test/resources/test.jpg"));
+
+        return new MockMultipartFile("mainImage", "test.jpg", "image/jpg", imageContent);
+    }
 }
